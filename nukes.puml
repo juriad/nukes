@@ -1,0 +1,44 @@
+@startuml
+hide empty description
+
+    object USA
+    object Russia
+    object China
+    object India
+    object Pakistan
+    object NorthKorea
+    object Israel
+    object Iran
+    object SouthKorea
+    object Japan
+    object SaudiArabia
+    object France
+    object UnitedKingdom
+
+    USA <-[#red]- Japan : "WWII"
+    USA <-[#red]-> Russia : "Cold War"
+    
+'    Russia <-[#red]- USA : "Cold War"
+
+    China <-[#purple]- USA : "Become Superpower"
+    China <-[#purple]- Russia : "Become Superpower"
+
+    India <-[#orange]-> Pakistan : "Rivalry"
+    India <-[#green]- Russia : "Helps"
+
+'    Pakistan <-- India : "Rivalry"
+    Pakistan <-[#green]- NorthKorea : "Helps"
+
+    NorthKorea <-[#blue]- USA : "Protection"
+    NorthKorea <-[#blue]- SouthKorea : "Protection"
+    NorthKorea <-[#blue]- Japan : "Protection"
+    NorthKorea <-[#green]- China : "Helps"
+
+    Israel <-[#blue]- Iran : "Protection"
+    Israel <-[#blue]- SaudiArabia : "Protection"
+
+    France <-[#red]- Russia : "Cold War"
+
+    UnitedKingdom <-[#red]- Russia : "Cold War"
+    UnitedKingdom <-[#green]- USA : "Helps"
+@enduml
