@@ -1,6 +1,8 @@
 library(tidyverse)
 library(spatstat)
 
+countries <- read_csv('data/countries.csv') %>% mutate(first_test_age = 2022 - first_test)
+
 nukes <- read_csv('data/nuclear_weapons_stockpiles.csv', comment = '#') %>%
   rename(country = country_name) %>%
   filter(country != 'Israel') %>%
@@ -11,35 +13,48 @@ production <- nukes %>%
   mutate(produced = nuclear_weapons_stockpile - lag(nuclear_weapons_stockpile, default = 0)) %>%
   select(-nuclear_weapons_stockpile)
 
-decomissioning <- production %>%
-  filter(produced < 0) %>%
-  summarise(decomissioned = -sum(produced))
-decomissioning
+current <- {
+  decomissioning <- production %>%
+    filter(produced < 0) %>%
+    summarise(decomissioned = -sum(produced))
+  decomissioning
 
-joined <- production %>%
-  filter(produced > 0) %>%
-  left_join(decomissioning) %>%
-  mutate(existing = cumsum(produced), decomissioned = coalesce(decomissioned, 0))
+  joined <- production %>%
+    filter(produced > 0) %>%
+    left_join(decomissioning) %>%
+    mutate(existing = cumsum(produced), decomissioned = coalesce(decomissioned, 0))
 
-eliminated <- joined %>%
-  filter(existing <= decomissioned)
+  eliminated <- joined %>%
+    filter(existing <= decomissioned)
 
-eliminated %>%
-  summarise(years = n(), exising = max(existing), el = max(decomissioned), leftover = max(existing) - max(decomissioned))
+  eliminated %>%
+    summarise(years = n(), exising = max(existing), el = max(decomissioned), leftover = max(existing) - max(decomissioned))
 
-modification <- joined %>%
-  filter(existing > decomissioned) %>%
-  summarise(produced = first(produced), year = min(year), existing = first(existing), el = first(decomissioned)) %>%
-  mutate(modified = existing - el)
-modification
-
-current <-
-  joined %>%
+  modification <- joined %>%
     filter(existing > decomissioned) %>%
-    left_join(modification, by = c("country", "year")) %>%
-    mutate(produced = coalesce(modified, produced.x),
-           age = 2022 - year) %>%
-    select(country, year, age, produced)
+    summarise(produced = first(produced), year = min(year), existing = first(existing), el = first(decomissioned)) %>%
+    mutate(modified = existing - el)
+  modification
+
+  current <-
+    joined %>%
+      filter(existing > decomissioned) %>%
+      left_join(modification, by = c("country", "year")) %>%
+      mutate(produced = coalesce(modified, produced.x),
+             age = 2022 - year) %>%
+      select(country, year, age, produced)
+  current
+}
+
+{
+  production %>%
+    filter(produced > 0) %>%
+    filter(country %in% c('Pakistan', 'China', 'North Korea', 'India', 'Israel')) %>%
+    ungroup() %>%
+    mutate(old = year < 2000) %>%
+    group_by(old) %>%
+    summarise(cnt = sum(produced))
+}
 
 current_stats <- current %>%
   summarise(current_nukes = sum(produced),
@@ -93,6 +108,8 @@ write_csv(nukes_stats, file = "data/production.csv")
               y75 = weighted.quantile(age, produced, probs = 0.75),
               y100 = weighted.quantile(age, produced, probs = 1))
 
+  order <- (avg %>% arrange(desc(m)))$country
+
   ggplot(all_produced, aes(x = age, y = produced)) +
     geom_point(aes(color = country), size = 0.5) +
     geom_line(aes(color = country), size = 0.2) +
@@ -101,11 +118,13 @@ write_csv(nukes_stats, file = "data/production.csv")
     theme_bw()
   ggsave("plots/prod-all.png", width = 15, height = 10, unit = "cm", dpi = 300)
 
-  ggplot(all_produced %>% inner_join(avg), aes(x = country, y = age)) +
+  ggplot(all_produced %>% inner_join(avg), aes(x = factor(country, levels = order), y = age)) +
     theme_bw() +
     geom_boxplot(aes(ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100)) +
     geom_point(data = avg, size = 2, aes(x = country, y = m), shape = 4) +
+    geom_point(data = countries, aes(x = country, y = first_test_age), shape = 2, size = 1) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10), sec.axis = sec_axis(~. * -1 + 2022, name = "year", breaks = scales::pretty_breaks(n = 10))) +
+    scale_x_discrete(name = "country") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   ggsave("plots/prod-all-box.png", width = 10, height = 15, unit = "cm", dpi = 300)
 }
@@ -120,6 +139,8 @@ write_csv(nukes_stats, file = "data/production.csv")
               y75 = weighted.quantile(age, produced, probs = 0.75),
               y100 = weighted.quantile(age, produced, probs = 1))
 
+  order <- (avg %>% arrange(desc(m)))$country
+
   ggplot(current, aes(x = age, y = produced)) +
     geom_point(aes(color = country), size = 0.5) +
     geom_line(aes(color = country), size = 0.2) +
@@ -128,11 +149,13 @@ write_csv(nukes_stats, file = "data/production.csv")
     theme_bw()
   ggsave("plots/prod-cur.png", width = 15, height = 10, unit = "cm", dpi = 300)
 
-  ggplot(current %>% inner_join(avg), aes(x = country, y = age)) +
+  ggplot(current %>% inner_join(avg), aes(x = factor(country, levels = order), y = age)) +
     theme_bw() +
     geom_boxplot(aes(ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100)) +
     geom_point(data = avg, size = 2, aes(x = country, y = m), shape = 4) +
+    geom_point(data = countries, aes(x = country, y = first_test_age), shape = 2, size = 1) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10), sec.axis = sec_axis(~. * -1 + 2022, name = "year", breaks = scales::pretty_breaks(n = 10))) +
+    scale_x_discrete(name = "country") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   ggsave("plots/prod-cur-box.png", width = 10, height = 15, unit = "cm", dpi = 300)
 }

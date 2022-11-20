@@ -1,4 +1,4 @@
-mygraph <- function(input, X, Y) {
+mygraph <- function(input, X, Y, xtrans = "identity") {
   pear <- cor.test(input[[X]], input[[Y]], method = "pearson", use = "complete.obs")
   spear <- cor.test(input[[X]], input[[Y]], method = "spearman", use = "complete.obs", exact = FALSE)
   annotations <- data.frame(
@@ -10,6 +10,8 @@ mygraph <- function(input, X, Y) {
     )
   )
 
+  # if_else(xtrans == "identity", 1, 0)
+
   ggplot(input) +
     update_geom_defaults("text", list(size = 3.5, hjust = "inward", vjust = "inward")) +
     aes_string(x = X, y = Y) +
@@ -18,16 +20,19 @@ mygraph <- function(input, X, Y) {
     geom_rug(alpha = 0.4, size = 1.5) +
     geom_smooth(method = lm, formula = y ~ poly(x, 1), level = 0.95) +
     geom_label_repel(box.padding = 0.35, point.padding = 0.5, segment.color = 'grey50', min.segment.length = 0.2, aes(label = country)) +
-    geom_text(data = annotations, aes(x = Inf, y = if_else(pear$estimate < 0, Inf, -Inf), label = annotateText, hjust = 1, vjust = if_else(pear$estimate < 0, 1.3, 0))) +
-    scale_x_continuous(breaks = scales::pretty_breaks(n = 6)) +
+    geom_text(data = annotations, aes(x = if_else(xtrans == "identity", Inf, -Inf),
+                                      y = if_else((pear$estimate < 0) == (xtrans == "identity"), Inf, -Inf),
+                                      label = annotateText,
+                                      hjust = 1, vjust = if_else((pear$estimate < 0) == (xtrans == "identity"), 1.3, 0))) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 8), trans = xtrans) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
     theme_bw(
       # base_size = 14
     )
 }
 
-mygraphs <- function(input, X, Y) {
-  mygraph(input, X, Y)
+mygraphs <- function(input, X, Y, ...) {
+  mygraph(input, X, Y, ...)
   ggsave(str_interp("plots/xy-${X}-${Y}.png"), width = 10, height = 10, dpi = 300, unit = "cm")
 }
 

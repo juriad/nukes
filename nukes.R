@@ -11,7 +11,6 @@ joined <- read_csv('data/countries.csv') %>%
   inner_join(read_csv('data/deployment.csv')) %>%
   inner_join(read_csv('data/production.csv')) %>%
   mutate(
-    neg_age = -average_age,
     asc_rat = ascended + ratified,
     asc_rat_rate = asc_rat / eligible,
     asc_sign = ascended + signed,
@@ -63,11 +62,42 @@ joined <- read_csv('data/countries.csv') %>%
   mygraphs(input, "first_test", "land_rate")
   mygraphs(input, "first_test", "subs")
 
-  mygraphs(input, "average_age", "sea")
-  mygraphs(input, "average_age", "land")
+  mygraphs(input, "first_test", "sea")
+  mygraphs(input, "first_test", "land")
 
   mygraphs(input, "first_test", "ssb")
   mygraphs(input, "first_test", "first_sea_missile")
+}
+
+{
+  source("graphs.R")
+
+  input <- joined
+
+  mygraphs(input, "average_age", "eligible", xtrans="reverse")
+  mygraphs(input, "average_age", "asc_sign", xtrans="reverse")
+  mygraphs(input, "average_age", "asc_sign_rate", xtrans="reverse")
+  mygraphs(input, "average_age", "asc_rat", xtrans="reverse")
+  mygraphs(input, "average_age", "asc_rat_rate", xtrans="reverse")
+  mygraphs(input, "average_age", "declined", xtrans="reverse")
+  mygraphs(input, "average_age", "dec_rate", xtrans="reverse")
+
+  mygraphs(input, "average_age", "has_deployed", xtrans="reverse")
+  mygraphs(input, "average_age", "deployed", xtrans="reverse")
+  mygraphs(input, "average_age", "deployed_rate", xtrans="reverse")
+  mygraphs(input, "average_age", "has_sea", xtrans="reverse")
+  mygraphs(input, "average_age", "sea", xtrans="reverse")
+  mygraphs(input, "average_age", "sea_rate", xtrans="reverse")
+  mygraphs(input, "average_age", "has_land", xtrans="reverse")
+  mygraphs(input, "average_age", "land", xtrans="reverse")
+  mygraphs(input, "average_age", "land_rate", xtrans="reverse")
+  mygraphs(input, "average_age", "subs", xtrans="reverse")
+
+  mygraphs(input, "average_age", "sea", xtrans="reverse")
+  mygraphs(input, "average_age", "land", xtrans="reverse")
+
+  mygraphs(input, "average_age", "ssb", xtrans="reverse")
+  mygraphs(input, "average_age", "first_sea_missile", xtrans="reverse")
 }
 
 
@@ -77,8 +107,12 @@ joined <- read_csv('data/countries.csv') %>%
   input <- joined
 
   myboxplots(input, "cat_sea", "first_test")
+  myboxplots(input, "cat_sea", "average_age")
+
   myboxplots(input, "cat_paradigm", "sea")
+
   myboxplots(input, "cat_continent", "first_test")
+  myboxplots(input, "cat_continent", "average_age")
 }
 
 {
@@ -87,7 +121,7 @@ joined <- read_csv('data/countries.csv') %>%
   input <- joined
 
   time <- c("first_test", "first_produced", "oldest_existing", "last_produced", "average_age", "median_age", "paradigm")
-  alt_time <- c("first_age", "last_age", "oldest_age", "newest_existing", "newest_age", "neg_age")
+  alt_time <- c("first_age", "last_age", "oldest_age", "newest_existing", "newest_age")
   good <- c("eligible", "asc_sign", "asc_sign_rate", "asc_rat", "asc_rat_rate", "declined", "dec_rate",
             "has_deployed", "deployed", "deployed_rate", "has_land", "land", "land_rate",
             "has_sea", "sea", "sea_rate", "sea_log", "subs", "ssb", "first_sea_missile")
