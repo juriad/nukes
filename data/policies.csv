@@ -1,0 +1,9 @@
+country,nuclear_strike,conventional_strike,invasion,border_buildup,cat_policy,triggers
+China,TRUE,FALSE,FALSE,FALSE,if_nuked,1
+France,TRUE,TRUE,TRUE,TRUE,always,4
+India,TRUE,FALSE,FALSE,FALSE,if_nuked,1
+Pakistan,TRUE,TRUE,TRUE,FALSE,if_attacked,3
+North Korea,TRUE,TRUE,TRUE,FALSE,if_attacked,3
+Russia,TRUE,TRUE,TRUE,TRUE,always,4
+UK,TRUE,TRUE,TRUE,NA,always,4
+USA,TRUE,TRUE,TRUE,TRUE,always,4

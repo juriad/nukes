@@ -1,4 +1,4 @@
-mygraph <- function(input, X, Y, xtrans = "identity") {
+mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "number") {
   pear <- cor.test(input[[X]], input[[Y]], method = "pearson", use = "complete.obs")
   spear <- cor.test(input[[X]], input[[Y]], method = "spearman", use = "complete.obs", exact = FALSE)
   annotations <- data.frame(
@@ -10,9 +10,13 @@ mygraph <- function(input, X, Y, xtrans = "identity") {
     )
   )
 
-  # if_else(xtrans == "identity", 1, 0)
+  if (type == "$") {
+    ls <- label_number_si(prefix = "$")
+  } else {
+    ls <- waiver()
+  }
 
-  ggplot(input) +
+  g <- ggplot(input) +
     update_geom_defaults("text", list(size = 3.5, hjust = "inward", vjust = "inward")) +
     aes_string(x = X, y = Y) +
     geom_point() +
@@ -25,10 +29,16 @@ mygraph <- function(input, X, Y, xtrans = "identity") {
                                       label = annotateText,
                                       hjust = 1, vjust = if_else((pear$estimate < 0) == (xtrans == "identity"), 1.3, 0))) +
     scale_x_continuous(breaks = scales::pretty_breaks(n = 8), trans = xtrans) +
-    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = ybreaks), labels = ls) +
     theme_bw(
       # base_size = 14
     )
+
+  if (type == "$") {
+    g + coord_cartesian(ylim = c(0, NA))
+  } else {
+    g
+  }
 }
 
 mygraphs <- function(input, X, Y, ...) {
@@ -70,19 +80,25 @@ myboxplots <- function(input, X, Y) {
   ggsave(str_interp("plots/box-${X}-${Y}.png"), width = 10, height = 10, dpi = 300, unit = "cm")
 }
 
-crosscor <- function(input, Xs = NA, Ys = NA, method = "pearson") {
-  cat <- c("country", "cat_sea", "cat_paradigm", "cat_continent")
+crosscor <- function(input, Xs = NA, Ys = NA, method = "pearson", cutoff = 0.7, shape = "ellipse", coef = NULL) {
+  cat <- c("country", "cat_sea", "cat_paradigm", "cat_continent", "cat_policy", "cat_triggers")
 
   t <- input %>% select(-cat)
   Ys <- setdiff(Ys, cat)
 
   Z <- cor(t, method = method, use = "pairwise.complete.obs")
-  Z1 <- Z * (Z > 0.7) + Z * (Z < -0.7)
+  if (cutoff == 0) {
+    Z1 <- Z
+  } else if (cutoff > 0) {
+    Z1 <- Z * (Z > cutoff | Z < -cutoff)
+  } else {
+    Z1 <- Z * (Z < -cutoff & Z > cutoff)
+  }
 
   if (anyNA(Xs) & anyNA(Ys)) {
     corrplot(Z1,
-             method = "ellipse",
-             # addCoef.col = 'white',
+             method = shape,
+             addCoef.col = coef,
              type = "full",
              order = "AOE", #"FPC",
              diag = FALSE,
@@ -103,16 +119,17 @@ crosscor <- function(input, Xs = NA, Ys = NA, method = "pearson") {
     print(rowSums(abs(Z2)))
 
     corrplot(Z2,
-             method = "ellipse",
-             # addCoef.col = 'white',
+             method = shape,
+             addCoef.col = coef,
              type = "full",
              diag = FALSE,
     )
   }
 }
 
-crosscors <- function(input, Xs = NA, Ys = NA, method = NA, suffix = NA) {
-  png(file = str_interp("plots/cc-${method}-${suffix}.png"), type = "cairo", res = 300, width = 20, height = 10, unit = "cm")
-  crosscor(input, Xs, Ys, method)
+crosscors <- function(input, Xs = NA, Ys = NA, method = NA, suffix = NA, ...) {
+  width <- 10.0 * length(Ys) / length(Xs)
+  png(file = str_interp("plots/cc-${method}-${suffix}.png"), type = "cairo", res = 300, width = width, height = 10, unit = "cm")
+  crosscor(input, Xs, Ys, method, ...)
   dev.off()
 }
