@@ -6,7 +6,7 @@ joined <- read_csv('data/countries.csv') %>%
     asc_rat_rate = asc_rat / eligible,
     asc_sign = ascended + signed,
     asc_sign_rate = asc_sign / eligible,
-    dec_rate = declined / eligible,
+    dec_rate = declined / eligible
   )
 
 {
@@ -21,4 +21,5 @@ joined <- read_csv('data/countries.csv') %>%
   mygraphs(input, "average_age", "asc_rat_rate", dir = "treaties", xtrans = "reverse")
   mygraphs(input, "average_age", "declined", dir = "treaties", xtrans = "reverse")
   mygraphs(input, "average_age", "dec_rate", dir = "treaties", xtrans = "reverse")
+  mygraphs(input, "average_age", "years_to_ascend_ratify", dir = "treaties", xtrans = "reverse")
 }

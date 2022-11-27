@@ -1,10 +1,9 @@
-country,eligible,signed,ratified,ascended,declined,withdrew
-USA,25,23,15,0,1,2
-Russia,24,21,21,0,1,2
-UK,14,12,12,0,1,0
-France,15,10,10,1,3,0
-China,12,7,6,2,2,0
-India,8,3,3,1,3,0
-Pakistan,8,3,3,0,4,0
-North Korea,6,0,0,1,4,1
-,,space antarctic
+country,eligible,signed,ratified,ascended,declined,withdrew,years_to_ascend_ratify
+USA,26,25,16,0,1,2,3.375
+Russia,25,24,24,0,1,2,4.71428571428571
+UK,15,14,14,0,1,0,4
+France,16,12,12,1,3,0,7.38461538461539
+China,13,7,6,4,2,0,10.3
+India,9,4,4,2,3,0,6.83333333333333
+Pakistan,9,4,4,1,4,0,15.8
+North Korea,7,0,0,3,4,1,29

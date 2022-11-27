@@ -23,9 +23,9 @@ joined <- read_csv('data/gen/econ_2021.csv') %>%
   mygraphs(input, "average_age", "military_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Military Budget")
   mygraphs(input, "average_age", "nukes_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nukes Budget")
 
-  mygraphs(input, "average_age", "gdp_per_nuke", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "GDP / Nuke")
-  mygraphs(input, "average_age", "military_budget_per_nuke", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Military Budget / Nuke")
-  mygraphs(input, "average_age", "nukes_budget_per_nuke", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nukes Budget / Nuke")
+  mygraphs(input, "average_age", "gdp_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "GDP / Nuke")
+  mygraphs(input, "average_age", "military_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Military Budget / Nuke")
+  mygraphs(input, "average_age", "nukes_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nukes Budget / Nuke")
 
   mygraphs(input, "average_age", "military_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Military Budget / GDP")
   mygraphs(input, "average_age", "nukes_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Nukes Budget / GDP")
@@ -56,9 +56,9 @@ econ <- read_csv('data/gen/econ.csv') %>%
   yearlys(input, "military_budget", dir = "econ", type = "$", ylabel = "Military Budget")
   yearlys(input, "nukes_budget", dir = "econ", type = "$", ylabel = "Nukes Budget")
 
-  yearlys(input, "gdp_per_nuke", dir = "econ", type = "$", ylabel = "GDP / nuke")
-  yearlys(input, "military_budget_per_nuke", dir = "econ", type = "$", ylabel = "Military Budget / Nuke")
-  yearlys(input, "nukes_budget_per_nuke", dir = "econ", type = "$", ylabel = "Nukes Budget / Nuke")
+  yearlys(input, "gdp_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "GDP / nuke")
+  yearlys(input, "military_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Military Budget / Nuke")
+  yearlys(input, "nukes_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Nukes Budget / Nuke")
 
   yearlys(input, "military_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Military Budget / GDP")
   yearlys(input, "nukes_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Nukes Budget / GDP")
