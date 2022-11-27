@@ -1,0 +1,33 @@
+country,year,budget
+China,2021,11.7
+China,2020,10.1
+China,2019,10.4
+China,2018,10
+France,2021,5.9
+France,2020,5.7
+France,2019,4.8
+France,2018,4.4
+India,2021,2.3
+India,2020,2.48
+India,2019,2.3
+India,2018,2.1
+North Korea,2021,0.642
+North Korea,2020,0.667
+North Korea,2019,0.62
+North Korea,2018,0.6
+Pakistan,2021,1.1
+Pakistan,2020,1
+Pakistan,2019,1
+Pakistan,2018,1.2
+Russia,2021,8.6
+Russia,2020,8
+Russia,2019,8.5
+Russia,2018,8
+UK,2021,6.8
+UK,2020,6.2
+UK,2019,8.9
+UK,2018,8.9
+USA,2021,44.2
+USA,2020,37.4
+USA,2019,35.4
+USA,2018,29.6

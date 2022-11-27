@@ -1,4 +1,10 @@
-mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "number") {
+source('graphs_common.R')
+
+library(corrplot)
+# library(gridExtra)
+library(cowplot)
+
+mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "number", xlabel = waiver(), ylabel = waiver()) {
   pear <- cor.test(input[[X]], input[[Y]], method = "pearson", use = "complete.obs")
   spear <- cor.test(input[[X]], input[[Y]], method = "spearman", use = "complete.obs", exact = FALSE)
   annotations <- data.frame(
@@ -12,6 +18,8 @@ mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "numb
 
   if (type == "$") {
     ls <- label_number_si(prefix = "$")
+  } else if (type == "%") {
+    ls <- label_percent()
   } else {
     ls <- waiver()
   }
@@ -19,31 +27,76 @@ mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "numb
   g <- ggplot(input) +
     update_geom_defaults("text", list(size = 3.5, hjust = "inward", vjust = "inward")) +
     aes_string(x = X, y = Y) +
-    geom_point() +
     geom_line(na.rm = TRUE) +
-    geom_rug(alpha = 0.4, size = 1.5) +
+    geom_point(aes(color = country)) +
+    geom_rug(alpha = 0.4, size = 1.5, aes(colour = country)) +
     geom_smooth(method = lm, formula = y ~ poly(x, 1), level = 0.95) +
     geom_label_repel(box.padding = 0.35, point.padding = 0.5, segment.color = 'grey50', min.segment.length = 0.2, aes(label = country)) +
     geom_text(data = annotations, aes(x = if_else(xtrans == "identity", Inf, -Inf),
                                       y = if_else((pear$estimate < 0) == (xtrans == "identity"), Inf, -Inf),
                                       label = annotateText,
                                       hjust = 1, vjust = if_else((pear$estimate < 0) == (xtrans == "identity"), 1.3, 0))) +
-    scale_x_continuous(breaks = scales::pretty_breaks(n = 8), trans = xtrans) +
-    scale_y_continuous(breaks = scales::pretty_breaks(n = ybreaks), labels = ls) +
-    theme_bw(
-      # base_size = 14
-    )
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 8), trans = xtrans, name = xlabel) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = ybreaks), labels = ls, name = ylabel) +
+    scale_color_manual(values = cs, guide = "none") +
+    theme_bw()
 
-  if (type == "$") {
+  if (type == "$" | type == "%") {
     g + coord_cartesian(ylim = c(0, NA))
   } else {
     g
   }
 }
 
-mygraphs <- function(input, X, Y, ...) {
+mygraphs <- function(input, X, Y, dir = "", ...) {
   mygraph(input, X, Y, ...)
-  ggsave(str_interp("plots/xy-${X}-${Y}.png"), width = 10, height = 10, dpi = 300, unit = "cm")
+  d <- mkdir(dir)
+  ggsave(mkfile(dir, "xy-${X}-${Y}.png", X = X, Y = Y), width = 10, height = 10, dpi = 300, unit = "cm")
+}
+
+yearly <- function(input, Y, xtrans = "identity", type = "number", ybreaks = 10, secondary = NULL, ylabel = waiver(), ...) {
+  if (type == "$") {
+    # label_number(scale_cut = cut_short_scale())
+    ls <- label_number_si(prefix = "$")
+  } else if (type == "%") {
+    ls <- label_percent()
+  } else {
+    ls <- waiver()
+  }
+
+  g1 <- ggplot(input) +
+    update_geom_defaults("text", list(size = 3.5, hjust = "inward", vjust = "inward")) +
+    aes_string(x = "year", y = Y) +
+    geom_point(aes(color = country)) +
+    geom_line(na.rm = TRUE, aes(color = country)) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 4), trans = xtrans, name = "Year") +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = ybreaks), labels = ls, name = ylabel) +
+    scale_color_manual(values = cs, name = "Country") +
+    theme_bw()
+
+  if (is_null(secondary)) {
+    g1
+  } else {
+    g2 <- ggplot(input %>% filter(!(country %in% secondary))) +
+      update_geom_defaults("text", list(size = 3.5, hjust = "inward", vjust = "inward")) +
+      aes_string(x = "year", y = Y) +
+      geom_point(aes(color = country)) +
+      geom_line(na.rm = TRUE, aes(color = country)) +
+      scale_x_continuous(breaks = scales::pretty_breaks(n = 4), trans = xtrans, name = "Year") +
+      scale_y_continuous(breaks = scales::pretty_breaks(n = ybreaks), labels = ls, name = ylabel) +
+      scale_color_manual(values = cs, guide = "none") +
+      theme_bw()
+    # arrangeGrob(g1, g2, ncol = 2)
+    plot_grid(g1, g2, labels = "AUTO", rel_widths = c(3, 2))
+  }
+}
+
+yearlys <- function(input, Y, dir = "", name = NULL, secondary = NULL, ...) {
+  yearly(input, Y, secondary = secondary, ...)
+  if (is.null(name)) {
+    name <- Y
+  }
+  ggsave(mkfile(dir, "yearly-${name}.png", name = name), width = if_else(is_null(secondary), 10, 15), height = 10, dpi = 300, unit = "cm")
 }
 
 myboxplot <- function(input, X, Y) {
@@ -70,18 +123,17 @@ myboxplot <- function(input, X, Y) {
     geom_point(data = avg, color = "red", size = 3, aes_string(x = X, y = "y")) +
     geom_rug(data = avg, sides = "l", color = "red", aes_string(x = X, y = "y"), alpha = 0.4, size = 1.5) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-    theme_bw(
-      # base_size = 10
-    )
+    theme_bw()
 }
 
-myboxplots <- function(input, X, Y) {
+myboxplots <- function(input, X, Y, dir = "") {
   myboxplot(input, X, Y)
-  ggsave(str_interp("plots/box-${X}-${Y}.png"), width = 10, height = 10, dpi = 300, unit = "cm")
+  d <- mkdir(dir)
+  ggsave(str_interp("${d}/box-${X}-${Y}.png"), width = 10, height = 10, dpi = 300, unit = "cm")
 }
 
 crosscor <- function(input, Xs = NA, Ys = NA, method = "pearson", cutoff = 0.7, shape = "ellipse", coef = NULL) {
-  cat <- c("country", "cat_sea", "cat_paradigm", "cat_continent", "cat_policy", "cat_triggers")
+  cat <- c("country", "cat_sea", "cat_paradigm", "cat_continent", "cat_policy", "cat_triggers", "aging")
 
   t <- input %>% select(-cat)
   Ys <- setdiff(Ys, cat)

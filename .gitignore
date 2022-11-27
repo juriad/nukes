@@ -1,2 +1,5 @@
 *.iml
 .idea/
+
+plots/
+data/gen/
