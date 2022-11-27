@@ -56,7 +56,7 @@ econ <- read_csv('data/gen/econ.csv') %>%
   yearlys(input, "military_budget", dir = "econ", type = "$", ylabel = "Military Budget")
   yearlys(input, "nukes_budget", dir = "econ", type = "$", ylabel = "Nukes Budget")
 
-  yearlys(input, "gdp_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "GDP / nuke")
+  yearlys(input, "gdp_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "GDP / Nuke")
   yearlys(input, "military_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Military Budget / Nuke")
   yearlys(input, "nukes_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Nukes Budget / Nuke")
 

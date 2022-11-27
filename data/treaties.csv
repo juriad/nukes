@@ -1,9 +1,9 @@
-country,eligible,signed,ratified,ascended,declined,withdrew,years_to_ascend_ratify
-USA,26,25,16,0,1,2,3.375
-Russia,25,24,24,0,1,2,4.71428571428571
-UK,15,14,14,0,1,0,4
-France,16,12,12,1,3,0,7.38461538461539
-China,13,7,6,4,2,0,10.3
-India,9,4,4,2,3,0,6.83333333333333
-Pakistan,9,4,4,1,4,0,15.8
-North Korea,7,0,0,3,4,1,29
+country,eligible,signed,ratified,ascended,declined,withdrew,years_to_ascend_ratify,years_to_ascend_ratify_2022,years_to_ascend_ratify_median,years_to_ascend_ratify_median_2022
+USA,26,25,16,0,1,2,3.375,11.96,1,2
+Russia,25,24,24,0,1,2,4.71428571428571,4.71428571428571,1,1
+UK,15,14,14,0,1,0,4,4,1.5,1.5
+France,16,12,12,1,3,0,7.38461538461539,7.38461538461539,5,5
+China,13,7,6,4,2,0,10.3,11.7272727272727,5.5,6
+India,9,4,4,2,3,0,6.83333333333333,6.83333333333333,1,1
+Pakistan,9,4,4,1,4,0,15.8,15.8,1,1
+North Korea,7,0,0,3,4,1,29,29,28,28

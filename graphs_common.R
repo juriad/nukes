@@ -19,10 +19,10 @@ mkfile <- function(dir, pattern, ...) {
   str_interp(p, env = list(...))
 }
 
-cs <- brewer.pal(n = 9, name = "Set1")
-names(cs) <- c('Russia', 'USA', 'Pakistan',
-               'India', 'China', 'South Africa',
-               'UK', 'France', 'North Korea')
+# cs <- brewer.pal(n = 9, name = "Set1")
+# names(cs) <- c('Russia', 'USA', 'Pakistan',
+#                'India', 'China', 'South Africa',
+#                'UK', 'France', 'North Korea')
 
 cs <- pal_d3("category10")(9)
 names(cs) <- c('USA', 'China', 'Pakistan',

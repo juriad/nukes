@@ -17,21 +17,10 @@ joined <- read_csv('data/countries.csv') %>%
   ) %>%
   filter(TRUE)
 
-
 {
   source("graphs.R")
 
   input <- joined
-
-  mygraphs(input, "average_age", "triggers", xtrans = "reverse", ybreaks = 5)
-}
-
-{
-  source("graphs.R")
-
-  input <- joined
-
-  myboxplots(input, "cat_triggers", "average_age")
 
   myboxplots(input, "cat_continent", "first_test")
   myboxplots(input, "cat_continent", "average_age")
