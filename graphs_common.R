@@ -1,6 +1,7 @@
 library(ggrepel)
 library(scales)
 library(stringr)
+library(ggsci)
 
 mkdir <- function(dir) {
   d <- "plots"

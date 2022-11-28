@@ -37,18 +37,39 @@ corner_text <- function(text, position = "tr", xtrans = "identity", xdist = 0, y
   geom_text(data = data.frame(label = text), aes(x = x, y = y, label = label, hjust = hjust, vjust = vjust))
 }
 
-mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "number", xlabel = waiver(), ylabel = waiver(), ymin = NA, ymax = NA, cpos = NULL) {
+mygraph <- function(input, X, Y, xtrans = "identity", ybreaks = 10, type = "number", xlabel = waiver(), ylabel = waiver(), ymin = NA, ymax = NA, cpos = NULL, methods = c('pearson', 'spearman')) {
   pear <- cor.test(input[[X]], input[[Y]], method = "pearson", use = "complete.obs")
   spear <- cor.test(input[[X]], input[[Y]], method = "spearman", use = "complete.obs", exact = FALSE)
-  annotations <- paste0(
-    "Pearson ", round(pear$estimate, 2),
-    "\n",
-    "p-value ", format(signif(pear$p.value, 2), scientific = FALSE),
-    "\n",
-    "Spearman ", round(spear$estimate, 2),
-    "\n",
-    "p-value ", format(signif(spear$p.value, 2), scientific = FALSE)
-  )
+  kend <- cor.test(input[[X]], input[[Y]], method = "kendall", use = "complete.obs", exact = FALSE)
+
+  annotations <- ""
+  if ('pearson' %in% methods) {
+    annotations <- paste0(
+      annotations,
+      "Pearson ", round(pear$estimate, 2),
+      "\n",
+      "p-value ", format(signif(pear$p.value, 2), scientific = FALSE),
+      "\n"
+    )
+  }
+  if ('spearman' %in% methods) {
+    annotations <- paste0(
+      annotations,
+      "Spearman ", round(spear$estimate, 2),
+      "\n",
+      "p-value ", format(signif(spear$p.value, 2), scientific = FALSE),
+      "\n"
+    )
+  }
+  if ('kendall' %in% methods) {
+    annotations <- paste0(
+      annotations,
+      "Kendall ", round(kend$estimate, 2),
+      "\n",
+      "p-value ", format(signif(kend$p.value, 2), scientific = FALSE),
+      "\n"
+    )
+  }
 
   if (type == "$") {
     ls <- label_number_si(prefix = "$")

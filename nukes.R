@@ -11,6 +11,7 @@ joined <- read_csv('data/countries.csv') %>%
   inner_join(read_csv('data/gen/prod.csv')) %>%
   inner_join(read_csv('data/policies.csv')) %>%
   mutate(
+    nukes = deployed + reserve,
     paradigm = +(cat_paradigm == 'Euroamerican'),
     cat_triggers = paste(triggers),
     aging = if_else(median_age < average_age, "rather older", "rather newer")

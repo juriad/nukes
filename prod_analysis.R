@@ -77,4 +77,3 @@ production <- function(input, name) {
 
 production(all_produced, "all")
 production(current, "cur")
-
