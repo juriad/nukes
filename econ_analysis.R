@@ -20,16 +20,16 @@ joined <- read_csv('data/gen/econ_2021.csv') %>%
   input <- joined %>% filter(country != "North Korea")
 
   mygraphs(input, "average_age", "gdp", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "GDP")
-  mygraphs(input, "average_age", "military_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Military Budget")
-  mygraphs(input, "average_age", "nukes_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nukes Budget")
+  mygraphs(input, "average_age", "military_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Defense Spending")
+  mygraphs(input, "average_age", "nukes_budget", dir = "econ", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nuclear Arsenal Spending")
 
   mygraphs(input, "average_age", "gdp_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "GDP / Nuke")
-  mygraphs(input, "average_age", "military_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Military Budget / Nuke")
-  mygraphs(input, "average_age", "nukes_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nukes Budget / Nuke")
+  mygraphs(input, "average_age", "military_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Defense Spending / Nuke")
+  mygraphs(input, "average_age", "nukes_budget_per_nuke", dir = "econ-per-nuke", xtrans = "reverse", type = "$", xlabel = "Average Age", ylabel = "Nuclear Arsenal Spending / Nuke")
 
-  mygraphs(input, "average_age", "military_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Military Budget / GDP")
-  mygraphs(input, "average_age", "nukes_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Nukes Budget / GDP")
-  mygraphs(input, "average_age", "nukes_budget_military_budget_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Nukes Budget / Military Budget")
+  mygraphs(input, "average_age", "military_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Defense Spending / GDP")
+  mygraphs(input, "average_age", "nukes_budget_gdp_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Nuclear Arsenal Spending / GDP")
+  mygraphs(input, "average_age", "nukes_budget_military_budget_rate", dir = "econ", xtrans = "reverse", type = "%", xlabel = "Average Age", ylabel = "Nuclear Arsenal Spending / Defense Spending")
 }
 
 econ <- read_csv('data/gen/econ.csv') %>%
@@ -53,20 +53,20 @@ econ <- read_csv('data/gen/econ.csv') %>%
     filter(country != "North Korea")
 
   yearlys(input, "gdp", dir = "econ", type = "$", ylabel = "GDP")
-  yearlys(input, "military_budget", dir = "econ", type = "$", ylabel = "Military Budget")
-  yearlys(input, "nukes_budget", dir = "econ", type = "$", ylabel = "Nukes Budget")
+  yearlys(input, "military_budget", dir = "econ", type = "$", ylabel = "Defense Spending")
+  yearlys(input, "nukes_budget", dir = "econ", type = "$", ylabel = "Nuclear Arsenal Spending")
 
   yearlys(input, "gdp_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "GDP / Nuke")
-  yearlys(input, "military_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Military Budget / Nuke")
-  yearlys(input, "nukes_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Nukes Budget / Nuke")
+  yearlys(input, "military_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Defense Spending / Nuke")
+  yearlys(input, "nukes_budget_per_nuke", dir = "econ-per-nuke", type = "$", ylabel = "Nuclear Arsenal Spending / Nuke")
 
-  yearlys(input, "military_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Military Budget / GDP")
-  yearlys(input, "nukes_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Nukes Budget / GDP")
-  yearlys(input, "nukes_budget_military_budget_rate", dir = "econ", type = "%", ylabel = "Nukes Budget / Military Budget")
+  yearlys(input, "military_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Defense Spending / GDP")
+  yearlys(input, "nukes_budget_gdp_rate", dir = "econ", type = "%", ylabel = "Nuclear Arsenal Spending / GDP")
+  yearlys(input, "nukes_budget_military_budget_rate", dir = "econ", type = "%", ylabel = "Nuclear Arsenal Spending / Defense Spending")
 
   yearlys(input, "gdp", dir = "econ", name = "gdp_without_usa_china", type = "$", secondary = c('China', 'USA'), ylabel = "GDP")
-  yearlys(input, "military_budget", dir = "econ", name = "military_budget_without_usa_china", type = "$", secondary = c('China', 'USA'), ylabel = "Military Budget")
-  yearlys(input, "nukes_budget", dir = "econ", name = "nukes_budget_without_usa", type = "$", secondary = c('USA'), ylabel = "Nukes Budget")
+  yearlys(input, "military_budget", dir = "econ", name = "military_budget_without_usa_china", type = "$", secondary = c('China', 'USA'), ylabel = "Defense Spending")
+  yearlys(input, "nukes_budget", dir = "econ", name = "nukes_budget_without_usa", type = "$", secondary = c('USA'), ylabel = "Nuclear Arsenal Spending")
 }
 
 # mygraph(input, "nukes", "nukes_budget")
